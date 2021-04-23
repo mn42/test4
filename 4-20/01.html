@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <canvas width="500" height="500"></canvas>
+    <script>
+        var mycanvas = document.querySelector("canvas");
+        var ctx = mycanvas.getContext("2d");
+        var w = mycanvas.width;
+        var h = mycanvas.height;
+
+        ctx.beginPath();
+        ctx.fillRect(0, 0, mycanvas.width, mycanvas.height);
+
+        mycanvas.onmousedown = function (e) {
+            var x = e.offsetX;
+            var y = e.offsetY;
+            var x0 = x - 50;
+            var y0 = y - 50;
+            var img = new Image();
+            img.onload = function () {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(x, y, 50, 0, 2 * Math.PI);
+                ctx.clip();
+                ctx.drawImage(img, x0, y0, 100, 100);
+                ctx.restore();
+            }
+            img.src = "02.jpg";
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* * {
+            margin: 0;
+            padding: 0;
+        } */
+
+        .box {
+            position: relative;
+            width: 500px;
+            height: 500px;
+        }
+
+        img {
+            width: 500px;
+            height: 500px;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            border: 1px solid red;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <img src="01.jpg" alt="">
+        <canvas width="500" height="500"></canvas>
+    </div>
+
+    <script>
+        var mycanvas = document.querySelector("canvas");
+        var ctx = mycanvas.getContext("2d");
+        var w = mycanvas.width;
+        var h = mycanvas.height;
+        var img = new Image();
+        img.onload = function () {
+            ctx.drawImage(img, 0, 0, w, h);
+            ctx.globalCompositeOperation = "destination-out";
+        }
+        img.src = "02.jpg";
+
+        //求触摸时在画布中的坐标
+        function getXY(x, y) {
+            var obj = mycanvas.getBoundingClientRect();
+            return {
+                x: x - obj.x,
+                y: y - obj.y
+            }
+        }
+
+        mycanvas.addEventListener("mousedown", function (e) {
+            var x = e.offsetX;
+            var y = e.offsetY;
+            ctx.lineWidth = 30;
+            ctx.lineJoin = "round";
+            ctx.lineCap = "round";
+            ctx.moveTo(x, y);
+
+            mycanvas.onmousemove = move;
+            function move(e) {
+                var mx = e.offsetX, my = e.offsetY;
+                ctx.lineTo(mx, my);
+                ctx.stroke();
+            }
+            document.onmouseup = function () {
+                mycanvas.onmousemove = null;
+            }
+        })
+
+        mycanvas.addEventListener("touchstart", function (e) {
+            e.preventDefault();
+            // var x = e.targetTouches[0].pageX;
+            //得到触摸时的坐标
+            var obj = getXY(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
+            var x = obj.x;
+            var y = obj.y;
+            ctx.lineWidth = 30;
+            ctx.lineJoin = "round";
+            ctx.lineCap = "round";
+            ctx.moveTo(x, y);
+        })
+        mycanvas.addEventListener("touchmove", function (e) {
+            var obj = getXY(e.targetTouches[0].pageX, e.targetTouches[0].pageY);
+            ctx.lineTo(obj.x, obj.y);
+            ctx.stroke();
+        })
+    </script>
+</body>
+
+</html>
